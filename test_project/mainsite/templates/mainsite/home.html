@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body>
+    <section>
+        <div class="container">
+            <label>
+                Sign up
+            </label>
+            {% if request.session.user %}
+            <label>로그인 되어 있음</label>
+            {% endif %}
+            <small class="form-text text-muted"><a herf="{% url 'login' %}">Sign In</a></small>
+            <div id="return_err"></div>
+            <!-- 유저를 생성해주는 view를 연결해주는 url 설정 -->
+            <form action="{% url 'create' %}" method="POST" id='form'>
+                <!-- POST 형태로 데이터를 전송할 때는 무조건 데이터를 토큰화 시켜야한다.
+                    그러기 위해서 데이터 토큰화를 해준다는 구문을 넣어줘야하는데 그것이 token csrf이다. -->
+                {% csrf_token %}
+                <!-- email을 받는 구문 -->
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" name="email" class="form-control" id="exampleInputEmail1"
+                        aria-describedby="emailHelp" required>
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                        else.</small>
+                </div>
+                <!-- 이름을 받는 구문 -->
+                <div class="form-group">
+                    <label for="exampleInputName1">Name</label>
+                    <input type="text" name="name" class="form-control" id="exampleInputName1" required>
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your name with anyone
+                        else.</small>
+                </div>
+                <!-- 패스워드를 입력받는 구문 -->
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" name="password" class="form-control" id="pwd">
+                </div>
+                <!-- 패스워드 체크 -->
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Check your Password</label>
+                    <input type="password" name="password_check" class="form-control" id="checkpwd">
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" name="isCheck" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Male</label>
+                </div>
+                <!-- submit이 아닌 button으로 해주는 이유는 js에 먼저 접근해서 js에서 확인 후 submit으로 넘어가는 방법을 사용했기 때문 -->
+                <button type="button" class="btn btn-primary" onclick="checkpassword()">Submit</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        // 대충 패스워드가 동일해야지만 통과할 수 있도록 해주는 js
+        function checkpassword() {
+            var pwd = document.getElementById('pwd').value;
+            var checkpwd = document.getElementById('checkpwd').value;
+            console.log(pwd, checkpwd);
+            if (pwd === checkpwd) {
+                document.getElementById('form').submit();
+            }
+            else {
+                document.getElementById('return_err').innerHTML = "<div class='alert alert-danger' role='alert'>Wrong Password!</div>";
+            }
+        }
+    </script>
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
